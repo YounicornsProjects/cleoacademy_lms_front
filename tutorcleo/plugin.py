@@ -43,21 +43,21 @@ config: t.Dict[str, t.Dict[str, t.Any]] = {
 
 # Theme templates
 hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
-    str(importlib_resources.files("tutorindigo") / "templates")
+    str(importlib_resources.files("tutorcleo") / "templates")
 )
 # This is where the theme is rendered in the openedx build directory
 hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
     [
-        ("indigo", "build/openedx/themes"),
-        ("indigo/env.config.jsx", "plugins/mfe/build/mfe"),
+        ("cleo", "build/openedx/themes"),
+        ("cleo/env.config.jsx", "plugins/mfe/build/mfe"),
     ],
 )
 
 # Force the rendering of scss files, even though they are included in a "partials" directory
 hooks.Filters.ENV_PATTERNS_INCLUDE.add_items(
     [
-        r"indigo/lms/static/sass/partials/lms/theme/",
-        r"indigo/cms/static/sass/partials/cms/theme/",
+        r"cleo/lms/static/sass/partials/lms/theme/",
+        r"cleo/cms/static/sass/partials/cms/theme/",
     ]
 )
 
@@ -65,8 +65,8 @@ hooks.Filters.ENV_PATTERNS_INCLUDE.add_items(
 # init script: set theme automatically
 with open(
     os.path.join(
-        str(importlib_resources.files("tutorindigo") / "templates"),
-        "indigo",
+        str(importlib_resources.files("tutorcleo") / "templates"),
+        "cleo",
         "tasks",
         "init.sh",
     ),
@@ -88,9 +88,9 @@ def _override_openedx_docker_image(
         elif k == "MFE_DOCKER_IMAGE":
             mfe_image = v
     if openedx_image:
-        items.append(("DOCKER_IMAGE_OPENEDX", f"{openedx_image}-indigo"))
+        items.append(("DOCKER_IMAGE_OPENEDX", f"{openedx_image}-cleo"))
     if mfe_image:
-        items.append(("MFE_DOCKER_IMAGE", f"{mfe_image}-indigo"))
+        items.append(("MFE_DOCKER_IMAGE", f"{mfe_image}-cleo"))
     return items
 
 
@@ -146,7 +146,7 @@ hooks.Filters.ENV_PATCHES.add_items(
             "openedx-common-assets-settings",
             """
 javascript_files = ['base_application', 'application', 'certificates_wv']
-dark_theme_filepath = ['indigo/js/dark-theme.js']
+dark_theme_filepath = ['cleo/js/dark-theme.js']
 
 for filename in javascript_files:
     if filename in PIPELINE['JAVASCRIPT']:
@@ -158,7 +158,7 @@ for filename in javascript_files:
             "openedx-lms-development-settings",
             """
 javascript_files = ['base_application', 'application', 'certificates_wv']
-dark_theme_filepath = ['indigo/js/dark-theme.js']
+dark_theme_filepath = ['cleo/js/dark-theme.js']
 
 for filename in javascript_files:
     if filename in PIPELINE['JAVASCRIPT']:
@@ -180,7 +180,7 @@ MFE_CONFIG['INDIGO_ENABLE_DARK_TOGGLE'] = {{ INDIGO_ENABLE_DARK_TOGGLE }}
 # Apply patches from tutor-indigo
 for path in glob(
     os.path.join(
-        str(importlib_resources.files("tutorindigo") / "patches"),
+        str(importlib_resources.files("tutorcleo") / "patches"),
         "*",
     )
 ):
