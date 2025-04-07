@@ -75,23 +75,23 @@ with open(
     hooks.Filters.CLI_DO_INIT_TASKS.add_item(("lms", task_file.read()))
 
 
-# # Override openedx & mfe docker image names
-# @hooks.Filters.CONFIG_DEFAULTS.add(priority=hooks.priorities.LOW)
-# def _override_openedx_docker_image(
-#     items: list[tuple[str, t.Any]]
-# ) -> list[tuple[str, t.Any]]:
-#     openedx_image = ""
-#     mfe_image = ""
-#     for k, v in items:
-#         if k == "DOCKER_IMAGE_OPENEDX":
-#             openedx_image = v
-#         elif k == "MFE_DOCKER_IMAGE":
-#             mfe_image = v
-#     if openedx_image:
-#         items.append(("DOCKER_IMAGE_OPENEDX", f"{openedx_image}-cleo"))
-#     if mfe_image:
-#         items.append(("MFE_DOCKER_IMAGE", f"{mfe_image}-cleo"))
-#     return items
+# Override openedx & mfe docker image names
+@hooks.Filters.CONFIG_DEFAULTS.add(priority=hooks.priorities.LOW)
+def _override_openedx_docker_image(
+    items: list[tuple[str, t.Any]]
+) -> list[tuple[str, t.Any]]:
+    openedx_image = ""
+    mfe_image = ""
+    for k, v in items:
+        if k == "DOCKER_IMAGE_OPENEDX":
+            openedx_image = v
+        elif k == "MFE_DOCKER_IMAGE":
+            mfe_image = v
+    if openedx_image:
+        items.append(("DOCKER_IMAGE_OPENEDX", f"{openedx_image}-cleo"))
+    if mfe_image:
+        items.append(("MFE_DOCKER_IMAGE", f"{mfe_image}-cleo"))
+    return items
 
 
 # Load all configuration entries
