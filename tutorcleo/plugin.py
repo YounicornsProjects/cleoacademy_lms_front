@@ -26,7 +26,7 @@ config: t.Dict[str, t.Dict[str, t.Any]] = {
         "ENABLE_DARK_TOGGLE": True,
         # Footer links are dictionaries with a "title" and "url"
         # To remove all links, run:
-        # tutor config save --set INDIGO_FOOTER_NAV_LINKS=[]
+        # tutor config save --set CLEO_FOOTER_NAV_LINKS=[]
         "FOOTER_NAV_LINKS": [
             {"title": "About Us", "url": "/about"},
             {"title": "Blog", "url": "/blog"},
@@ -96,16 +96,16 @@ def _override_openedx_docker_image(
 
 # Load all configuration entries
 hooks.Filters.CONFIG_DEFAULTS.add_items(
-    [(f"INDIGO_{key}", value) for key, value in config["defaults"].items()]
+    [(f"CLEO_{key}", value) for key, value in config["defaults"].items()]
 )
 hooks.Filters.CONFIG_UNIQUE.add_items(
-    [(f"INDIGO_{key}", value) for key, value in config["unique"].items()]
+    [(f"CLEO_{key}", value) for key, value in config["unique"].items()]
 )
 hooks.Filters.CONFIG_OVERRIDES.add_items(list(config["overrides"].items()))
 
 
 #  MFEs that are styled using Indigo
-indigo_styled_mfes = [
+cleo_styled_mfes = [
     "learning",
     "learner-dashboard",
     "profile",
@@ -125,7 +125,7 @@ RUN npm install '@edx/brand@npm:@edly-io/indigo-brand-openedx@^2.2.2'
 
 """,
         )
-        for mfe in indigo_styled_mfes
+        for mfe in cleo_styled_mfes
     ]
 )
 
@@ -164,13 +164,13 @@ for filename in javascript_files:
     if filename in PIPELINE['JAVASCRIPT']:
         PIPELINE['JAVASCRIPT'][filename]['source_filenames'] += dark_theme_filepath
 
-MFE_CONFIG['INDIGO_ENABLE_DARK_TOGGLE'] = {{ INDIGO_ENABLE_DARK_TOGGLE }}
+MFE_CONFIG['CLEO_ENABLE_DARK_TOGGLE'] = {{ CLEO_ENABLE_DARK_TOGGLE }}
 """,
         ),
         (
             "openedx-lms-production-settings",
             """
-MFE_CONFIG['INDIGO_ENABLE_DARK_TOGGLE'] = {{ INDIGO_ENABLE_DARK_TOGGLE }}
+MFE_CONFIG['CLEO_ENABLE_DARK_TOGGLE'] = {{ CLEO_ENABLE_DARK_TOGGLE }}
 """,
         ),
     ]
@@ -188,7 +188,7 @@ for path in glob(
         hooks.Filters.ENV_PATCHES.add_item((os.path.basename(path), patch_file.read()))
 
 
-for mfe in indigo_styled_mfes:
+for mfe in cleo_styled_mfes:
     PLUGIN_SLOTS.add_item(
         (
             mfe,
